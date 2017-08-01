@@ -16,9 +16,8 @@ class apply_context {
                     chainbase::database& db, 
                     const chain::Transaction& t,
                     const chain::Message& m, 
-                    const types::AccountName& code,
-                    TransactionAuthorizationChecker* authChecker)
-         :controller(con),db(db),trx(t),msg(m),code(code),mutable_controller(con),mutable_db(db),authChecker(authChecker){}
+                    const types::AccountName& code)
+         :controller(con),db(db),trx(t),msg(m),code(code),mutable_controller(con),mutable_db(db){}
 
       int32_t store_i64( Name scope, Name table, Name key, const char* data, uint32_t len);
       int32_t remove_i64( Name scope, Name table, Name key );
@@ -58,8 +57,6 @@ class apply_context {
 
       chain_controller&    mutable_controller;
       chainbase::database& mutable_db;
-
-      TransactionAuthorizationChecker* authChecker;
 
       std::deque<AccountName>          notified;
       std::deque<ProcessedTransaction> sync_transactions; ///< sync calls made 
