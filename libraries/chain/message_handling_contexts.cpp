@@ -13,6 +13,7 @@ void apply_context::require_authorization(const types::AccountName& account) {
    auto itr = boost::find_if(msg.authorization, [&account](const auto& auth) { return auth.account == account; });
    EOS_ASSERT(itr != msg.authorization.end(), tx_missing_auth,
               "Transaction is missing required authorization from ${acct}", ("acct", account));
+   used_authorizations[itr - msg.authorization.begin()] = true;
 }
 
 void apply_context::require_scope(const types::AccountName& account)const {
@@ -24,6 +25,10 @@ void apply_context::require_scope(const types::AccountName& account)const {
       EOS_ASSERT( itr != trx.scope.end(), tx_missing_scope,
                  "Required scope ${scope} not declared by transaction", ("scope",account) );
    }
+}
+
+bool apply_context::all_authorizations_used() const {
+   return boost::algorithm::all_of_equal(used_authorizations, true);
 }
 
 bool apply_context::has_recipient( const types::AccountName& account )const {
